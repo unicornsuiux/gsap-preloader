@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 1. Reset Browser Defaults */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Poppins", serif;
+  color: #fff;
+  background-color: #000;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+  overflow-x: hidden;
+}
+.d-flex {
+  display: flex;
+}
+.container {
+  max-width: 1500px;
+  padding: 0 20px;
+  margin: auto;
+}
+
+
+
+.preloader span {
+  font-size: 80px;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  overflow-x: hidden;
+}
+.site-name {
+  background-color: #000;
+}
+.preloader-gutters {
+  background-color: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+}
+.preloader-overlay {
+  background-color: #000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  transform: translateX(-100%);
+}
+.preloader {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+.site-name {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  align-content: center;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  left: 0;
+}
+.preloader-gutters .bar {
+  width: 12.5%;
+  height: 100%;
+  background:transparent;
+  position: relative;
+}
+.preloader-gutters .inner-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: #fff;
+}
+.site-main {
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.site-main img{
+  width: 100%;
+  height: 100%;
+}
+</style>
+<body>
+    <div class="preloader">
+        <div class="site-name"><span>Cosmic</span></div>
+        <div class="preloader-gutters">
+          <div class="bar">
+            <div class="inner-bar"></div>
+          </div>
+          <div class="bar">
+            <div class="inner-bar"></div>
+          </div>
+          <div class="bar">
+            <div class="inner-bar"></div>
+          </div>
+          <div class="bar">
+            <div class="inner-bar"></div>
+          </div>
+          <div class="bar">
+            <div class="inner-bar"></div>
+          </div>
+          <div class="bar">
+            <div class="inner-bar"></div>
+          </div>
+          <div class="bar">
+            <div class="inner-bar"></div>
+          </div>
+          <div class="bar">
+            <div class="inner-bar"></div>
+          </div>
+        </div>
+        <div class="preloader-overlay"></div>
+    </div>
+    <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+</body>
+</html>
+
+<script>
+    // Select all elements with the class "inner-bar"
+const innerBars = document.querySelectorAll(".inner-bar");
+
+// Initialize a variable to keep track of the current increment
+let increment = 0;
+
+// Function to animate the inner bars
+function animateBars(){ 
+  // Loop through the first two inner bars (based on the current increment)
+  for(let i=0; i<2; i++){
+    // Generate a random width between 0 and 100%
+    let randomWidth = Math.floor(Math.random() * 101);
+    // Animate the width of the current inner bar to the random width
+    gsap.to(innerBars[i+increment],{
+      width: `${randomWidth}%`,
+      duration: 0.2,
+      direction: "left",
+      ease: "none"
+    })
+  }
+  
+  // Set a timeout to animate the inner bars back to 100% width
+  setTimeout(()=>{
+    // Loop through the first two inner bars (based on the current increment)
+    for(let i=0; i<2; i++){
+      // Animate the width of the current inner bar back to 100%
+      gsap.to(innerBars[i+increment],{
+        width: "100%",
+        duration: 0.2,
+        direction: "left",
+        ease: "none"
+      })
+    }
+    // Increment the counter by 2 to move to the next two inner bars
+    increment += 2;
+    // Check if there are more inner bars to animate
+    if(increment<innerBars.length){
+      // If there are more, call the animateBars function again
+      animateBars()
+    }else{
+      //setting the animation to hide preloader and show site content 
+      const preloaderTl = gsap.timeline()
+      preloaderTl.to(".preloader-overlay",{
+        transform: "translateX(0)",
+        duration: 0.5,
+        ease: "none",
+        delay: 0.4
+      })
+      preloaderTl.to(".preloader",{
+        display: "none",
+        duration: 0,
+        ease: "none"
+      })
+      preloaderTl.to(".site-main",{
+        display: "block",
+        duration: 0,
+      })
+      preloaderTl.to(".site-main",{
+        opacity: 1,
+        transform: "translateY(0)",
+        duration: 0.4,
+        ease: "none"
+      })
+      
+    }
+
+  },200)
+
+  // End of animateBars function
+}
+
+// Run the animateBars function on window load
+window.onload = function() {
+  setTimeout(() => {
+    animateBars();
+  }, 1000);
+}
+
+
+</script>
